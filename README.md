@@ -165,6 +165,7 @@ Figure 6: A screenshot of the first few observations in the job post data set
 - See also the [“polite”](https://github.com/dmi3kno/polite) R package
 
 
-
+**Wim Louw Research Manager, J-PAL Africa
+30 November 2020**
 
 
