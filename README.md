@@ -1,18 +1,18 @@
 # Webscraping
 
 ## Introduction
-The following post illustrates an approach to “scraping” information from a job posting site where each page on the site contains a number of job post titles, each linking to a full job post. For more resources, considerations, and examples see here.
+The following post illustrates an approach to “scraping” information from a job posting site where each page on the site contains a number of job post titles, each linking to a full job post. For more resources, considerations, and [examples see here](https://wimlouw.com/2020/11/14/webscraping/).
 
 > [!Note] 
 > For webscraping tasks, each website is different and solutions will need to be tailored.
 
-Example objective: The code in this example scrapes job post information from “https://www.gumtree.co.za/”. The objective is to identify, extract, and aggregate job post information into a data set. We will use an approach called “screen scraping”, or HTML parsing. I use a combination of my browser’s “inspect tool” and SelectorGadget (“point and click CSS selectors”) to figure out what pattern (in the HTML) identifies the piece of information on my screen I’m interested in scraping (in this case job titles, job descriptions, location, &c.). I use the rvest R package (“rvest helps you scrape information from webpages”), and a number of tidyverse tools for data manipulation.
+Example objective: The code in this example scrapes job post information from “https://www.gumtree.co.za/”. The objective is to identify, extract, and aggregate job post information into a data set. We will use an approach called “screen scraping”, or [HTML](https://www.w3schools.com/html/html_intro.asp) parsing. I use a combination of my browser’s [“inspect tool”](https://developers.google.com/web/tools/chrome-devtools/open) and [SelectorGadget](http://selectorgadget.com/) (“point and click CSS selectors”) to figure out what pattern (in the HTML) identifies the piece of information on my screen I’m interested in scraping (in this case job titles, job descriptions, location, &c.). I use the [rvest](https://github.com/tidyverse/rvest) R package (“rvest helps you scrape information from webpages”), and a number of [tidyverse tools](https://www.tidyverse.org/) for data manipulation.
 
 > [!Note]
->  An “element” refers to an HTML element: “An HTML element is defined by a start tag, some content, and an end tag.” CSS-selectors “are used to "find" (or select) the HTML elements […]”
+>  An “element” refers to an [HTML element](https://www.w3schools.com/html/html_elements.asp): “An HTML element is defined by a start tag, some content, and an end tag.” [CSS-selectors](https://www.w3schools.com/css/css_selectors.asp) “are used to "find" (or select) the HTML elements […]”
 
 Best practice:
-1. Check if the site has a “robots.txt” file which — if a site has one — includes do’s and don’ts for scrapers/crawlers. This file can be found at the root of the website host, i.e. “https://www.gumtree.co.za/robots.txt”. In the example, I use the robotstxt package to access and check the robots.txt file.
+1. Check if the site has a [“robots.txt”](https://en.wikipedia.org/wiki/Robots_exclusion_standard) file which — if a site has one — includes do’s and don’ts for scrapers/crawlers. This file can be found at the root of the website host, i.e. “https://www.gumtree.co.za/robots.txt”. In the example, I use the [robotstxt](https://cran.r-project.org/web/packages/robotstxt/vignettes/using_robotstxt.html) package to access and check the robots.txt file.
 2. Don’t go too fast, don’t send too many requests to the website per second — be polite.
 
 ![webscraping 1](https://github.com/csae-coders-corner/Webscraping/assets/148211163/4c2b6a09-73d5-4d28-a8ee-1c0cc074c82a)
@@ -28,9 +28,9 @@ Figure 2: A  screenshot of using the inspect tool to identify the right CSS-sele
 Figure 3: A screenshot of the full job ad (after clicking on the title): Here using the inspect tool to identify the right CSS-selector for the description field (“.description-website-container”)
 
 ## Code
-**Approach:** One function to clean an individual element; One function to clean an individual job post (i.e. to clean multiple elements and store the result as a tibble); One loop to extract links to individual job posts over multiple pages and to store these in a list; One loop to iterate over a list of job links, to apply the post cleaning function, and to store the result in a list (a list of tibbles); finally, to collapse the list of tibbles into a single data set, and to export to your chosen location.
+**Approach:** One function to clean an individual element; One function to clean an individual job post (i.e. to clean multiple elements and store the result as a [tibble](https://r4ds.had.co.nz/tibbles.html)); One loop to extract links to individual job posts over multiple pages and to store these in a list; One loop to iterate over a list of job links, to apply the post cleaning function, and to store the result in a list (a list of tibbles); finally, to collapse the list of tibbles into a single data set, and to export to your chosen location.
 
-**Bells and whistles:**  I use the purrr package’s “possibly()” function to deal with errors (so the script doesn’t break when a link is broken); I use the progress package to show me, in my console, how far along the scraping is.
+**Bells and whistles:**  I use the [purrr](https://purrr.tidyverse.org/) package’s “possibly()” function to deal with errors (so the script doesn’t break when a link is broken); I use the [progress package to show me, in my console, how far along the scraping is.
 
 **Inputs:** A number of pages to scrape; a link fragment to increment; CSS-selectors. Outputs: A list of job post links to iterate over; a list of tibbles; a dataset of job ads.
 
