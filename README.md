@@ -36,7 +36,7 @@ Figure 3: A screenshot of the full job ad (after clicking on the title): Here us
 
 **Inputs:** A number of pages to scrape; a link fragment to increment; CSS-selectors. Outputs: A list of job post links to iterate over; a list of tibbles; a dataset of job ads.
 
-
+```
 #A. Libraries ####
 
 library(tidyverse) ## for data manipulation (various packages)
@@ -44,13 +44,15 @@ library(robotstxt) ## to get robotstxt protocols
 library(rvest) ## for scraping
 library(textclean) ## some cleaning functions
 library(progress) ## for tracking progress in console
+```
 
-
+```
 #B. Check permissions ####
 
 robotstxt::paths_allowed("https://www.gumtree.co.za/") ## should be TRUE
+```
 
-
+```
 #C. Function 1: A function to clean an individual element ####
 ##This function takes the page HTML and the CSS selector, extracts the text, and outputs clean text
 
@@ -63,8 +65,9 @@ clean_element <- function(page_html, selector) {
   output <- ifelse(length(output) == 0, NA, output) ## in case an element is missing
   return(output)
 }
+```
 
-
+```
 #D. Function 2: A function to clean a job ad ####
 ##This function extracts information from a single job ad. It takes a job ad link, reads the HTML, and cleans the items you're interested in; finally it returns a tibble
 
@@ -89,8 +92,9 @@ clean_ad <- function(link) {
     )
   return(dat)
 }
+```
 
-
+```
 #E. Loop 1: To get a list of job ad links ####
 ##This loop takes a URL fragment, and increments the web page-number up to a number you've specified. On each page of ads, it extracts the job post link from the job title
 
@@ -111,8 +115,9 @@ for (i in 1:pages) {
 
 links <- unlist(job_list) ## make a single list
 links <- paste0("https://www.gumtree.co.za", links) ## format
+```
 
-
+```
 #F. Let's go ####
 ##We set up the "bells and whistles": A way to see scraping progress in the console, and a way handle errors (when links don't work). We iterate through each job link in our list of links, apply the job-ad cleaning function, and store the resulting tibble in a list; finally we collapse this list of tibbles into our desired data set
 
@@ -133,7 +138,9 @@ for (i in 1:total) {
   output[[i]] <- deets # add to list
   Sys.sleep(2) ## resting
 }
+```
 
+```
 #G. Combine all tibbles in the list into a single big tibble ####
 
 all <- output[!is.na(output)] ## remove empty tibbles, if any
@@ -141,7 +148,7 @@ all <- bind_rows(all) ## Fab!
 glimpse(all)
 
 write_csv(all, "myfile.csv") ## export
-
+```
 ## Results
 You can see the progress of the script, an example of a job tibble, and the first few observations of the resultant dataset in the screenshots below. 
 
